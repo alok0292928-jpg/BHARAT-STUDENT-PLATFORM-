@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BharatAI – Auth</title>
+
+<style>
+    body { margin:0; background:#0b1220; color:white; font-family:Arial; }
+    .container {
+        max-width:360px; margin:50px auto; padding:25px;
+        background:#111827; border-radius:15px; box-shadow:0 0 20px #0006;
+    }
+    input {
+        width:100%; padding:12px; border-radius:10px; border:none;
+        background:#1f2937; color:white; margin:10px 0;
+    }
+    button {
+        width:100%; padding:12px; border:none; background:#2563eb;
+        border-radius:10px; margin-top:10px; color:white; cursor:pointer;
+    }
+    .google-btn { background:#db4437; }
+    .toggle-text { text-align:center; margin-top:15px; }
+    .toggle-text span { color:#60a5fa; cursor:pointer; }
+    .hidden { display:none; }
+    h2 { text-align:center; }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- REGISTER -->
+    <div id="registerPage">
+        <h2>Create Account</h2>
+
+        <input id="regEmail" type="email" placeholder="Email">
+        <input id="regPass" type="password" placeholder="Password">
+
+        <button onclick="registerEmail()">Register</button>
+        <button class="google-btn" onclick="googleAuth()">Register with Google</button>
+
+        <p class="toggle-text">Already have an account? <span onclick="showLogin()">Login</span></p>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="loginPage" class="hidden">
+        <h2>Login</h2>
+
+        <input id="logEmail" type="email" placeholder="Email">
+        <input id="logPass" type="password" placeholder="Password">
+
+        <button onclick="loginEmail()">Login</button>
+        <button class="google-btn" onclick="googleAuth()">Login with Google</button>
+
+        <p class="toggle-text">Don’t have an account? <span onclick="showRegister()">Register</span></p>
+    </div>
+
+</div>
+
+
+<!-- FIREBASE AUTH -->
+<script type="module">
+
+// -------------- IMPORTS --------------
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+import {
+    getAuth,
+    GoogleAuthProvider,
+    signInWithPopup,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword
+} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+
+// -------------- CONFIG --------------
+const firebaseConfig = {
+    apiKey: "AIzaSyDmToqWOaBjODzAauhpxriCg-imiAKg-aQ",
+    authDomain: "bharat-student-platform.firebaseapp.com",
+    databaseURL: "https://bharat-student-platform-default-rtdb.firebaseio.com",
+    projectId: "bharat-student-platform",
+    storageBucket: "bharat-student-platform.firebasestorage.app",
+    messagingSenderId: "390311052094",
+    appId: "1:390311052094:web:93234b2311c1a44a87226f",
+    measurementId: "G-NDBKSP54N4"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+
+
+// -------------- TOGGLE UI --------------
+window.showLogin = () => {
+    document.getElementById("loginPage").classList.remove("hidden");
+    document.getElementById("registerPage").classList.add("hidden");
+};
+
+window.showRegister = () => {
+    document.getElementById("registerPage").classList.remove("hidden");
+    document.getElementById("loginPage").classList.add("hidden");
+};
+
+
+// -------------- EMAIL REGISTER --------------
+window.registerEmail = () => {
+    const email = document.getElementById("regEmail").value;
+    const pass = document.getElementById("regPass").value;
+
+    createUserWithEmailAndPassword(auth, email, pass)
+        .then(() => {
+            alert("Registration successful!");
+            window.location.href = "dashboard.html";
+        })
+        .catch(err => alert(err.message));
+};
+
+
+// -------------- EMAIL LOGIN --------------
+window.loginEmail = () => {
+    const email = document.getElementById("logEmail").value;
+    const pass = document.getElementById("logPass").value;
+
+    signInWithEmailAndPassword(auth, email, pass)
+        .then(() => {
+            alert("Login successful!");
+            window.location.href = "dashboard.html";
+        })
+        .catch(err => alert(err.message));
+};
+
+
+// -------------- GOOGLE LOGIN --------------
+window.googleAuth = () => {
+    signInWithPopup(auth, provider)
+        .then(() => {
+            alert("Google login successful!");
+            window.location.href = "dashboard.html";
+        })
+        .catch(err => alert(err.message));
+};
+
+</script>
+
+</body>
+</html>
