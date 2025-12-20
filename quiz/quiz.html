@@ -1,1 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Quiz Generator | BharatAI</title>
+    <link rel="stylesheet" href="quiz.css">
+</head>
 
+<body>
+
+<div class="header">
+    <button onclick="window.location='../dashboard.html'" class="back-btn">←</button>
+    AI Quiz Generator 🎯
+</div>
+
+<div class="container">
+
+    <h3>Select Subject</h3>
+    <select id="subjectSelect">
+        <option value="Math">Math</option>
+        <option value="Science">Science</option>
+        <option value="Biology">Biology</option>
+        <option value="Physics">Physics</option>
+        <option value="Chemistry">Chemistry</option>
+        <option value="History">History</option>
+        <option value="Geography">Geography</option>
+    </select>
+
+    <h3>Enter Topic</h3>
+    <input id="topicInput" type="text" placeholder="e.g., Photosynthesis, Algebra">
+
+    <h3>Difficulty</h3>
+    <select id="difficulty">
+        <option value="easy">Easy</option>
+        <option value="medium">Medium</option>
+        <option value="hard">Hard</option>
+    </select>
+
+    <button class="gen-btn" onclick="generateQuiz()">Generate Quiz</button>
+
+    <div id="quizBox" class="quiz-box hidden"></div>
+
+</div>
+
+<script src="quiz.js"></script>
+</body>
+</html>
