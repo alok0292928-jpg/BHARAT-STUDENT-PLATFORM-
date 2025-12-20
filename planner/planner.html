@@ -1,1 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Study Planner | BharatAI</title>
+    <link rel="stylesheet" href="planner.css">
+</head>
 
+<body>
+
+<div class="header">
+    <button class="back-btn" onclick="window.location='../dashboard.html'">←</button>
+    Study Planner 📝
+</div>
+
+<div class="container">
+
+    <h3>Add Study Task</h3>
+
+    <input id="subjectInput" type="text" placeholder="Subject (Math, Science...)">
+
+    <textarea id="taskInput" placeholder="Task (e.g. Chapter 2 Revision)"></textarea>
+
+    <button onclick="addTask()" class="add-btn">Add Task</button>
+
+    <h3 style="margin-top:30px;">Your Tasks</h3>
+
+    <div id="taskList"></div>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js"></script>
+
+<script src="../firebase-config.js"></script>
+<script src="planner.js"></script>
+
+</body>
+</html>
