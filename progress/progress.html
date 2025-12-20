@@ -1,1 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weekly Progress | BharatAI</title>
+    <link rel="stylesheet" href="progress.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
 
+<body>
+
+<div class="header">
+    <button class="back-btn" onclick="window.location='../dashboard.html'">←</button>
+    Weekly Study Progress 📊
+</div>
+
+<div class="container">
+    <canvas id="progressChart"></canvas>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js"></script>
+
+<script src="../firebase-config.js"></script>
+<script src="progress.js"></script>
+
+</body>
+</html>
