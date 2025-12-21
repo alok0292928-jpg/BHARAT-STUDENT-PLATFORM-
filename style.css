@@ -16,20 +16,15 @@ body {
   padding: 25px;
   border-radius: 10px;
   text-align: center;
-  box-shadow: 0 0 15px rgba(255,255,255,0.1);
-}
-
-h2 {
-  margin-bottom: 20px;
 }
 
 .box {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
-.box.hidden {
+.hidden {
   display: none;
 }
 
