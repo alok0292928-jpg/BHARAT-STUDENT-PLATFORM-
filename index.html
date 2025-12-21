@@ -10,9 +10,10 @@
 <body>
 
 <div class="container">
-    <h2>BharatAI Student Login</h2>
 
-    <!-- LOGIN BOX -->
+    <h2>BharatAI Student Platform</h2>
+
+    <!-- LOGIN -->
     <div id="loginBox" class="box">
         <h3>Login</h3>
 
@@ -21,27 +22,29 @@
 
         <button onclick="loginUser()">Login</button>
 
-        <p class="switch">Don't have an account?
-            <span onclick="showRegister()">Register</span>
+        <p class="switch">
+            Don't have an account? <span onclick="showRegister()">Register</span>
         </p>
     </div>
 
-    <!-- REGISTER BOX -->
+    <!-- REGISTER -->
     <div id="registerBox" class="box hidden">
         <h3>Register</h3>
 
+        <input type="text" id="registerName" placeholder="Full Name" />
         <input type="email" id="registerEmail" placeholder="Email" />
         <input type="password" id="registerPassword" placeholder="Password" />
 
         <button onclick="registerUser()">Register</button>
 
-        <p class="switch">Already have an account?
-            <span onclick="showLogin()">Login</span>
+        <p class="switch">
+            Already have an account? <span onclick="showLogin()">Login</span>
         </p>
     </div>
+
 </div>
 
-<script type="module" src="app.js"></script>
+<script type="module" src="auth.js"></script>
 
 </body>
 </html>
