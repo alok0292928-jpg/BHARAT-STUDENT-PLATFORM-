@@ -1,81 +1,95 @@
 import { firebaseConfig } from "../firebase-config.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { 
-    getDatabase, ref, push, set, get, child 
+    getAuth, 
+    GoogleAuthProvider,
+    signInWithPopup,
+    signInWithEmailAndPassword, 
+    createUserWithEmailAndPassword 
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+import { 
+    getDatabase, ref, set 
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-// Init Firebase
+// Init
 const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 const db = getDatabase(app);
 
-// SHOW REGISTER
-window.showRegister = function () {
+// Switch Forms
+window.showRegister = () => {
     document.getElementById("loginBox").classList.add("hidden");
     document.getElementById("registerBox").classList.remove("hidden");
 };
 
-// SHOW LOGIN
-window.showLogin = function () {
+window.showLogin = () => {
     document.getElementById("registerBox").classList.add("hidden");
     document.getElementById("loginBox").classList.remove("hidden");
 };
 
-// REGISTER (save to DB)
-window.registerUser = async function () {
+// Email REGISTER
+window.registerUser = () => {
     const name = document.getElementById("registerName").value;
     const email = document.getElementById("registerEmail").value;
     const pass = document.getElementById("registerPassword").value;
 
-    if (!email || !pass) {
-        alert("Please fill all fields!");
-        return;
-    }
+    createUserWithEmailAndPassword(auth, email, pass)
+    .then((userCred) => {
+        const uid = userCred.user.uid;
 
-    const userRef = ref(db, "users/");
-    const newUser = push(userRef);
+        set(ref(db, "users/" + uid), {
+            name: name,
+            email: email
+        });
 
-    await set(newUser, {
-        name: name,
-        email: email,
-        password: pass // (Simple version, hashing later)
-    });
-
-    alert("Registration Successful!");
-
-    localStorage.setItem("userId", newUser.key);
-
-    window.location.href = "../dashboard/dashboard.html";
+        localStorage.setItem("uid", uid);
+        window.location.href = "../dashboard/dashboard.html";
+    })
+    .catch(err => alert(err.message));
 };
 
-// LOGIN CHECK
-window.loginUser = async function () {
+// Email LOGIN
+window.loginUser = () => {
     const email = document.getElementById("loginEmail").value;
     const pass = document.getElementById("loginPassword").value;
 
-    const dbRef = ref(db);
+    signInWithEmailAndPassword(auth, email, pass)
+    .then((userCred) => {
+        localStorage.setItem("uid", userCred.user.uid);
+        window.location.href = "../dashboard/dashboard.html";
+    })
+    .catch(err => alert(err.message));
+};
 
-    const snapshot = await get(child(dbRef, "users"));
+// Google LOGIN
+window.googleLogin = () => {
+    const provider = new GoogleAuthProvider();
 
-    if (!snapshot.exists()) {
-        alert("No users found!");
-        return;
-    }
+    signInWithPopup(auth, provider)
+    .then((result) => {
+        const uid = result.user.uid;
+        localStorage.setItem("uid", uid);
+        window.location.href = "../dashboard/dashboard.html";
+    })
+    .catch(err => alert(err.message));
+};
 
-    let found = false;
+// Google REGISTER
+window.googleRegister = () => {
+    const provider = new GoogleAuthProvider();
 
-    snapshot.forEach((user) => {
-        const data = user.val();
+    signInWithPopup(auth, provider)
+    .then((result) => {
+        const user = result.user;
 
-        if (data.email === email && data.password === pass) {
-            found = true;
+        set(ref(db, "users/" + user.uid), {
+            name: user.displayName,
+            email: user.email
+        });
 
-            localStorage.setItem("userId", user.key);
-
-            window.location.href = "../dashboard/dashboard.html";
-        }
-    });
-
-    if (!found) {
-        alert("Invalid email or password!");
-    }
+        localStorage.setItem("uid", user.uid);
+        window.location.href = "../dashboard/dashboard.html";
+    })
+    .catch(err => alert(err.message));
 };
