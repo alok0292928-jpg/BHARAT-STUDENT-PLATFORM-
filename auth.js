@@ -1,6 +1,6 @@
-//-------------------------------
-// Firebase Config
-//-------------------------------
+// ==========================
+// FIREBASE IMPORTS
+// ==========================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
 
 import {
@@ -8,7 +8,8 @@ import {
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
     GoogleAuthProvider,
-    signInWithPopup,
+    signInWithRedirect,
+    getRedirectResult,
     onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
@@ -19,7 +20,9 @@ import {
 } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
 
-// * Your Firebase Config *
+// ==========================
+// FIREBASE CONFIG
+// ==========================
 const firebaseConfig = {
     apiKey: "AIzaSyDmToqWOaBjODzAauhpxriCg-imiAKg-aQ",
     authDomain: "bharat-student-platform.firebaseapp.com",
@@ -31,75 +34,73 @@ const firebaseConfig = {
     measurementId: "G-NDBKSP54N4"
 };
 
-// Init
+
+// ==========================
+// INIT FIREBASE SERVICES
+// ==========================
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 const googleProvider = new GoogleAuthProvider();
 
 
-//-------------------------------
-// REGISTER USER
-//-------------------------------
-window.registerUser = function () {
+// ==========================
+// EMAIL REGISTRATION
+// ==========================
+document.getElementById("registerBtn").addEventListener("click", () => {
     let name = document.getElementById("registerName").value;
     let email = document.getElementById("registerEmail").value;
     let pass = document.getElementById("registerPassword").value;
 
     createUserWithEmailAndPassword(auth, email, pass)
-        .then((userCred) => {
-            let uid = userCred.user.uid;
-
-            set(ref(db, "users/" + uid), {
-                name: name,
-                email: email
+        .then((cred) => {
+            set(ref(db, "users/" + cred.user.uid), {
+                name,
+                email,
+                created: Date.now()
             });
 
-            alert("Account created successfully!");
+            alert("Registration Successful!");
         })
-        .catch((err) => {
-            alert(err.message);
-        });
-};
+        .catch((err) => alert(err.message));
+});
 
 
-//-------------------------------
-// LOGIN USER
-//-------------------------------
-window.loginUser = function () {
+// ==========================
+// EMAIL LOGIN
+// ==========================
+document.getElementById("loginBtn").addEventListener("click", () => {
     let email = document.getElementById("loginEmail").value;
     let pass = document.getElementById("loginPassword").value;
 
     signInWithEmailAndPassword(auth, email, pass)
-        .then(() => {
-            console.log("Login successful");
-        })
-        .catch((err) => {
-            alert(err.message);
-        });
-};
+        .catch((err) => alert(err.message));
+});
 
 
-//-------------------------------
-// GOOGLE LOGIN
-//-------------------------------
-window.googleLogin = function () {
-    signInWithPopup(auth, googleProvider)
-        .then(() => {
-            console.log("Google login success");
-        })
-        .catch((err) => {
-            alert("Google Login Error: " + err.message);
-        });
-};
+// ==========================
+// GOOGLE LOGIN (MOBILE SAFE)
+// ==========================
+document.getElementById("googleBtn").addEventListener("click", () => {
+    signInWithRedirect(auth, googleProvider);
+});
+
+// Check Google Redirect result
+getRedirectResult(auth)
+    .then((result) => {
+        if (result && result.user) {
+            console.log("Google Login Success (Redirect)");
+        }
+    })
+    .catch((err) => alert("Google Login Error: " + err.message));
 
 
-//-------------------------------
-// AUTO LOGIN → DASHBOARD REDIRECT
-//-------------------------------
+// ==========================
+// AUTO-REDIRECT AFTER LOGIN
+// ==========================
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        console.log("Redirecting to dashboard...");
+        console.log("User logged in → Sending to dashboard...");
         window.location.href = "dashboard.html";
     }
 });
