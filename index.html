@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BharatAI - Login</title>
-    <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BharatAI - Student Platform</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -13,16 +13,17 @@
 
     <h2>BharatAI Student Platform</h2>
 
-    <!-- LOGIN -->
+    <!-- LOGIN BOX -->
     <div id="loginBox" class="box">
         <h3>Login</h3>
 
-        <input type="email" id="loginEmail" placeholder="Email" />
-        <input type="password" id="loginPassword" placeholder="Password" />
+        <input type="email" id="loginEmail" placeholder="Email">
+        <input type="password" id="loginPassword" placeholder="Password">
 
         <button id="loginBtn">Login</button>
 
-        <div class="google-btn" id="googleLoginBtn">
+        <!-- GOOGLE LOGIN BUTTON -->
+        <div id="googleBtn" class="google-btn">
             <img src="assets/google.png" /> Login with Google
         </div>
 
@@ -31,17 +32,18 @@
         </p>
     </div>
 
-    <!-- REGISTER -->
+    <!-- REGISTER BOX -->
     <div id="registerBox" class="box hidden">
         <h3>Register</h3>
 
-        <input type="text" id="registerName" placeholder="Full Name" />
-        <input type="email" id="registerEmail" placeholder="Email" />
-        <input type="password" id="registerPassword" placeholder="Password" />
+        <input type="text" id="registerName" placeholder="Full Name">
+        <input type="email" id="registerEmail" placeholder="Email">
+        <input type="password" id="registerPassword" placeholder="Password">
 
         <button id="registerBtn">Register</button>
 
-        <div class="google-btn" id="googleRegisterBtn">
+        <!-- GOOGLE REGISTER BUTTON -->
+        <div id="googleBtn" class="google-btn">
             <img src="assets/google.png" /> Register with Google
         </div>
 
@@ -52,7 +54,21 @@
 
 </div>
 
+<!-- AUTH LOGIC -->
 <script type="module" src="auth.js"></script>
+
+<script>
+// SIMPLE UI SWITCH (NO ERROR)
+document.getElementById("goRegister").onclick = () => {
+    document.getElementById("loginBox").classList.add("hidden");
+    document.getElementById("registerBox").classList.remove("hidden");
+};
+
+document.getElementById("goLogin").onclick = () => {
+    document.getElementById("registerBox").classList.add("hidden");
+    document.getElementById("loginBox").classList.remove("hidden");
+};
+</script>
 
 </body>
 </html>
