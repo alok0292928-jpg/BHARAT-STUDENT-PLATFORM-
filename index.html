@@ -20,14 +20,14 @@
         <input type="email" id="loginEmail" placeholder="Email" />
         <input type="password" id="loginPassword" placeholder="Password" />
 
-        <button onclick="loginUser()">Login</button>
+        <button id="loginBtn">Login</button>
 
-        <div class="google-btn" onclick="googleLogin()">
+        <div class="google-btn" id="googleLoginBtn">
             <img src="assets/google.png" /> Login with Google
         </div>
 
         <p class="switch">
-            Don’t have an account? <span onclick="showRegister()">Register</span>
+            Don’t have an account? <span id="goRegister">Register</span>
         </p>
     </div>
 
@@ -39,119 +39,20 @@
         <input type="email" id="registerEmail" placeholder="Email" />
         <input type="password" id="registerPassword" placeholder="Password" />
 
-        <button onclick="registerUser()">Register</button>
+        <button id="registerBtn">Register</button>
 
-        <div class="google-btn" onclick="googleRegister()">
+        <div class="google-btn" id="googleRegisterBtn">
             <img src="assets/google.png" /> Register with Google
         </div>
 
         <p class="switch">
-            Already have an account? <span onclick="showLogin()">Login</span>
+            Already have an account? <span id="goLogin">Login</span>
         </p>
     </div>
 
 </div>
 
-<!-- ===========================
-     FULL AUTH SYSTEM INLINE JS 
-     =========================== -->
-<script type="module">
-import { firebaseConfig } from "./firebase-config.js";
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-import { 
-    getAuth, 
-    GoogleAuthProvider,
-    signInWithPopup,
-    signInWithEmailAndPassword, 
-    createUserWithEmailAndPassword 
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-import { 
-    getDatabase, ref, set 
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
-// Init Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getDatabase(app);
-
-// Switch Register/Login
-window.showRegister = () => {
-    document.getElementById("loginBox").classList.add("hidden");
-    document.getElementById("registerBox").classList.remove("hidden");
-};
-
-window.showLogin = () => {
-    document.getElementById("registerBox").classList.add("hidden");
-    document.getElementById("loginBox").classList.remove("hidden");
-};
-
-// Email REGISTER
-window.registerUser = () => {
-    const name = document.getElementById("registerName").value;
-    const email = document.getElementById("registerEmail").value;
-    const pass = document.getElementById("registerPassword").value;
-
-    createUserWithEmailAndPassword(auth, email, pass)
-    .then((userCred) => {
-        const uid = userCred.user.uid;
-
-        set(ref(db, "users/" + uid), {
-            name: name,
-            email: email
-        });
-
-        localStorage.setItem("uid", uid);
-        window.location.href = "dashboard/dashboard.html";
-    })
-    .catch(err => alert(err.message));
-};
-
-// Email LOGIN
-window.loginUser = () => {
-    const email = document.getElementById("loginEmail").value;
-    const pass = document.getElementById("loginPassword").value;
-
-    signInWithEmailAndPassword(auth, email, pass)
-    .then((userCred) => {
-        localStorage.setItem("uid", userCred.user.uid);
-        window.location.href = "dashboard/dashboard.html";
-    })
-    .catch(err => alert(err.message));
-};
-
-// Google LOGIN
-window.googleLogin = () => {
-    const provider = new GoogleAuthProvider();
-
-    signInWithPopup(auth, provider)
-    .then((result) => {
-        localStorage.setItem("uid", result.user.uid);
-        window.location.href = "dashboard/dashboard.html";
-    })
-    .catch(err => alert(err.message));
-};
-
-// Google REGISTER
-window.googleRegister = () => {
-    const provider = new GoogleAuthProvider();
-
-    signInWithPopup(auth, provider)
-    .then((result) => {
-        const user = result.user;
-
-        set(ref(db, "users/" + user.uid), {
-            name: user.displayName,
-            email: user.email
-        });
-
-        localStorage.setItem("uid", user.uid);
-        window.location.href = "dashboard/dashboard.html";
-    })
-    .catch(err => alert(err.message));
-};
-</script>
+<script type="module" src="auth.js"></script>
 
 </body>
 </html>
