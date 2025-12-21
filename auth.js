@@ -1,10 +1,7 @@
-// =============================
-//  FIREBASE AUTH SETUP
-// =============================
-
-import { 
-    initializeApp 
-} from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+//-------------------------------
+// Firebase Config
+//-------------------------------
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
 
 import {
     getAuth,
@@ -22,9 +19,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
 
-// ====================================
-//  YOUR FIREBASE CONFIG (paste yours)
-// ====================================
+// * Your Firebase Config *
 const firebaseConfig = {
     apiKey: "AIzaSyDmToqWOaBjODzAauhpxriCg-imiAKg-aQ",
     authDomain: "bharat-student-platform.firebaseapp.com",
@@ -40,59 +35,58 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
-const provider = new GoogleAuthProvider();
+const googleProvider = new GoogleAuthProvider();
 
 
-// =============================
-//  REGISTER (Email + Password)
-// =============================
+//-------------------------------
+// REGISTER USER
+//-------------------------------
 window.registerUser = function () {
+    let name = document.getElementById("registerName").value;
     let email = document.getElementById("registerEmail").value;
     let pass = document.getElementById("registerPassword").value;
-    let name = document.getElementById("registerName").value;
 
     createUserWithEmailAndPassword(auth, email, pass)
         .then((userCred) => {
             let uid = userCred.user.uid;
 
-            // Save user to DB
             set(ref(db, "users/" + uid), {
                 name: name,
                 email: email
             });
 
-            alert("Registration successful!");
+            alert("Account created successfully!");
         })
         .catch((err) => {
-            alert("Error: " + err.message);
+            alert(err.message);
         });
 };
 
 
-// =============================
-//  LOGIN  (Email + Password)
-// =============================
+//-------------------------------
+// LOGIN USER
+//-------------------------------
 window.loginUser = function () {
     let email = document.getElementById("loginEmail").value;
     let pass = document.getElementById("loginPassword").value;
 
     signInWithEmailAndPassword(auth, email, pass)
         .then(() => {
-            console.log("Login success");
+            console.log("Login successful");
         })
         .catch((err) => {
-            alert("Error: " + err.message);
+            alert(err.message);
         });
 };
 
 
-// =============================
-//  GOOGLE LOGIN
-// =============================
+//-------------------------------
+// GOOGLE LOGIN
+//-------------------------------
 window.googleLogin = function () {
-    signInWithPopup(auth, provider)
+    signInWithPopup(auth, googleProvider)
         .then(() => {
-            console.log("Google Login Success");
+            console.log("Google login success");
         })
         .catch((err) => {
             alert("Google Login Error: " + err.message);
@@ -100,12 +94,12 @@ window.googleLogin = function () {
 };
 
 
-// =============================
-//  AUTO REDIRECT AFTER LOGIN
-// =============================
+//-------------------------------
+// AUTO LOGIN → DASHBOARD REDIRECT
+//-------------------------------
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        console.log("User logged in → Redirecting...");
-        window.location.href = "dashboard.html";   // 🔥 MOST IMPORTANT FIX
+        console.log("Redirecting to dashboard...");
+        window.location.href = "dashboard.html";
     }
 });
