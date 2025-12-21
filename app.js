@@ -5,38 +5,37 @@ import {
     signInWithEmailAndPassword 
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-// Your Firebase Config
 import { firebaseConfig } from "../firebase-config.js";
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// Switch Forms
+// SHOW REGISTER
 window.showRegister = function () {
     document.getElementById("loginBox").classList.add("hidden");
     document.getElementById("registerBox").classList.remove("hidden");
 };
 
+// SHOW LOGIN
 window.showLogin = function () {
     document.getElementById("registerBox").classList.add("hidden");
     document.getElementById("loginBox").classList.remove("hidden");
 };
 
-// Register User
+// REGISTER USER
 window.registerUser = function () {
     const email = document.getElementById("registerEmail").value;
     const password = document.getElementById("registerPassword").value;
 
     createUserWithEmailAndPassword(auth, email, password)
         .then(() => {
-            alert("Registered Successfully!");
+            alert("Registration Successful!");
             window.location.href = "../dashboard/dashboard.html";
         })
-        .catch((error) => alert(error.message));
+        .catch(err => alert(err.message));
 };
 
-// Login User
+// LOGIN USER
 window.loginUser = function () {
     const email = document.getElementById("loginEmail").value;
     const password = document.getElementById("loginPassword").value;
@@ -45,5 +44,5 @@ window.loginUser = function () {
         .then(() => {
             window.location.href = "../dashboard/dashboard.html";
         })
-        .catch((error) => alert(error.message));
+        .catch(err => alert(err.message));
 };
