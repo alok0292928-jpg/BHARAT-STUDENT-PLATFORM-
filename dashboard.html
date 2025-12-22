@@ -1,71 +1,64 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>BharatAI Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bharat Student Platform - Dashboard</title>
     <link rel="stylesheet" href="dashboard.css">
 </head>
 
 <body>
 
-<div class="header">
-    <span class="brand">🇮🇳 BharatAI Student Panel</span>
-    <button class="logout" onclick="logout()">Logout</button>
-</div>
-
-<div class="welcome-box">
-    <h2 id="welcomeUser">Hello Student 👋</h2>
-    <p>Your smart learning assistant is here.</p>
-</div>
-
-<h3 class="section-title">Main Features</h3>
-
-<div class="grid">
-
-    <div class="card" onclick="go('ai-chat/ai-chat.html')">
-        🤖 AI Chat
+    <div class="top-bar">
+        <h2 id="welcomeUser">Hello Student 👋</h2>
+        <button class="logout-btn" onclick="logout()">Logout</button>
     </div>
 
-    <div class="card" onclick="go('homework/homework.html')">
-        📸 Homework Scanner
+    <h3 class="section-title">Main Features</h3>
+
+    <div class="grid">
+
+        <div class="card" id="btnAI" onclick="go('ai-chat')">
+            🤖 <br> AI Chat
+        </div>
+
+        <div class="card" id="btnScanner" onclick="go('homework')">
+            📸 <br> Homework Scanner
+        </div>
+
+        <div class="card" id="btnRevision" onclick="go('smart-revision')">
+            ⚡ <br> Smart Revision
+        </div>
+
+        <div class="card" id="btnSubject" onclick="go('subject-notes')">
+            📘 <br> Subject Notes
+        </div>
+
+        <div class="card" id="btnQuiz" onclick="go('quiz')">
+            🎯 <br> Quiz Generator
+        </div>
+
+        <div class="card" id="btnSummary" onclick="go('notes-summary')">
+            📄 <br> Notes Summary
+        </div>
+
+        <div class="card" id="btnPlanner" onclick="go('planner')">
+            📅 <br> Study Planner
+        </div>
+
+        <div class="card" id="btnProgress" onclick="go('progress')">
+            📊 <br> Progress Graph
+        </div>
+
+        <div class="card" id="btnHistory" onclick="go('chat-history')">
+            🗂️ <br> Chat History
+        </div>
+
     </div>
 
-    <div class="card" onclick="go('smart-revision/revision.html')">
-        ⚡ Smart Revision
-    </div>
+    <h3 class="section-title">Recent Activity</h3>
+    <pre id="recentBox" class="recent-box">Loading…</pre>
 
-    <div class="card" onclick="go('subject-notes/subject.html')">
-        📘 Subject Notes
-    </div>
-
-    <div class="card" onclick="go('quiz/quiz.html')">
-        🎯 Quiz Generator
-    </div>
-
-    <div class="card" onclick="go('notes-summary/summary.html')">
-        📄 Notes Summary
-    </div>
-
-    <div class="card" onclick="go('planner/planner.html')">
-        📅 Study Planner
-    </div>
-
-    <div class="card" onclick="go('progress/progress.html')">
-        📊 Progress Graph
-    </div>
-
-    <div class="card" onclick="go('chat-history/history.html')">
-        🗂️ Chat History
-    </div>
-
-</div>
-
-<h3 class="section-title">Recent Activity</h3>
-
-<div id="recentBox" class="recent-box">
-    Loading activity...
-</div>
-
-<script src="dashboard.js"></script>
-
+<script type="module" src="dashboard.js"></script>
 </body>
 </html>
