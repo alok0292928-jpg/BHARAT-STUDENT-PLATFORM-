@@ -5,29 +5,46 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
 
 import {
-    getDatabase, ref, onValue
+    getDatabase,
+    ref,
+    onValue
 } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
 
 const auth = getAuth();
 const db = getDatabase();
 
+// LOGIN CHECK + USER NAME + RECENT ACTIVITY
 onAuthStateChanged(auth, (user)=>{
-    if(!user) location="auth.html";
+    if(!user) {
+        location = "index.html";
+        return;
+    }
 
-    const name = user.email.split("@")[0];
-    document.getElementById("welcomeUser").innerText = `Hello ${name} 👋`;
+    const username = user.email.split("@")[0];
+    document.getElementById("welcomeUser").innerText = `Hello ${username} 👋`;
 
     loadActivity(user.uid);
 });
 
+// ---------------------------
+// ⭐ FIXED NAVIGATION
+// ---------------------------
 function go(page){
-    window.location = "../" + page;
+    window.location = page + ".html";  // GitHub-safe
 }
 
+// ---------------------------
+// ⭐ FIXED LOGOUT
+// ---------------------------
 function logout(){
-    signOut(auth);
+    signOut(auth).then(()=>{
+        window.location = "index.html";
+    });
 }
 
+// ---------------------------
+// ⭐ RECENT ACTIVITY
+// ---------------------------
 function loadActivity(uid){
     onValue(ref(db, "recent/" + uid), (snap)=>{
         const box = document.getElementById("recentBox");
@@ -37,10 +54,10 @@ function loadActivity(uid){
             return;
         }
 
-        const data = Object.values(snap.val()).reverse().slice(0,5);
+        const items = Object.values(snap.val()).reverse().slice(0,5);
 
         box.innerHTML = "";
-        data.forEach(a=>{
+        items.forEach(a=>{
             box.innerHTML += `• ${a.text}\n`;
         });
     });
