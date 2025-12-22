@@ -1,71 +1,82 @@
-let IMAGE_URL = null;
+import { 
+    auth, 
+    db 
+} from "./firebase-config.js";
 
-// Bytescale upload manager
-const uploadManager = new Bytescale.UploadManager({
-    apiKey: "public_223k2XG77nda119Cf6ssD7yx4xrE"
+import { 
+    signOut 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+import { 
+    doc, getDoc 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+
+// ---------------------
+// 🔥 CHECK LOGIN STATUS
+// ---------------------
+auth.onAuthStateChanged(async (user) => {
+    if (!user) {
+        window.location.href = "index.html";
+        return;
+    }
+
+    document.getElementById("userName").innerText = user.displayName || "Student";
+
+    // Load activity
+    loadRecentActivity(user.uid);
 });
 
-// Upload image
-async function uploadImage(event){
-    const file = event.target.files[0];
-    if(!file) return;
 
-    document.getElementById("uploadStatus").innerText = "Uploading…";
 
-    const { fileUrl } = await uploadManager.upload({ data:file });
+// ---------------------
+// 🔥 LOADING RECENT ACTIVITY FROM FIRESTORE
+// ---------------------
+async function loadRecentActivity(uid) {
+    const activityBox = document.getElementById("activityList");
+    activityBox.innerHTML = "Loading...";
 
-    IMAGE_URL = fileUrl;
-
-    document.getElementById("uploadStatus").innerText = "Image uploaded ✔";
-    document.getElementById("preview").classList.remove("hidden");
-    document.getElementById("preview").innerHTML = `<img src="${fileUrl}" />`;
-}
-
-// Solve homework
-async function solveHomework(){
-    if(!IMAGE_URL){
-        return alert("Please upload an image first.");
-    }
-
-    const answerBox = document.getElementById("answerBox");
-    answerBox.classList.remove("hidden");
-    answerBox.innerText = "Reading question… 🤖📖";
-
-    const prompt = `
-    Solve the question in this image carefully:
-    ${IMAGE_URL}
-
-    Provide:
-    1. Step-by-step explanation
-    2. Correct final answer
-    3. Easy summary
-    4. If it's math → show proper steps
-    5. If it's theory → simple explanation
-    `;
-
-    const ai = await askGeminiVision(prompt);
-
-    answerBox.innerText = ai;
-}
-
-// Gemini Vision request
-async function askGeminiVision(prompt){
     try {
-        const res = await fetch(
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent?key=gen-lang-client-0755790144",
-            {
-                method:"POST",
-                headers:{"Content-Type":"application/json"},
-                body:JSON.stringify({
-                    contents:[{parts:[{text:prompt}]}]
-                })
-            }
-        );
+        const userRef = doc(db, "users", uid);
+        const userSnap = await getDoc(userRef);
 
-        const data = await res.json();
-        return data.candidates?.[0]?.content?.parts?.[0]?.text || "Could not solve the question.";
-    }
-    catch(e){
-        return "Error solving homework.";
+        if (userSnap.exists()) {
+            const data = userSnap.data();
+
+            activityBox.innerHTML = `
+                <p><b>Last Activity:</b> ${data.lastActivity || "No recent activity."}</p>
+                <p><b>Last Login:</b> ${data.lastLogin || "N/A"}</p>
+            `;
+        } else {
+            activityBox.innerHTML = "No recent activity recorded.";
+        }
+
+    } catch (error) {
+        activityBox.innerHTML = "Error loading activity.";
     }
 }
+
+
+
+// ---------------------
+// 🔥 NAVIGATION BUTTONS
+// ---------------------
+document.getElementById("aiChat").onclick = () => window.location.href = "ai-chat.html";
+document.getElementById("homework").onclick = () => window.location.href = "homework.html";
+document.getElementById("smartRevision").onclick = () => window.location.href = "revision.html";
+document.getElementById("subjectNotes").onclick = () => window.location.href = "subject.html";
+document.getElementById("quiz").onclick = () => window.location.href = "quiz.html";
+document.getElementById("notesSummary").onclick = () => window.location.href = "summary.html";
+document.getElementById("planner").onclick = () => window.location.href = "planner.html";
+document.getElementById("progress").onclick = () => window.location.href = "progress.html";
+document.getElementById("chatHistory").onclick = () => window.location.href = "history.html";
+
+
+
+// ---------------------
+// 🔥 LOGOUT
+// ---------------------
+document.getElementById("logoutBtn").onclick = async () => {
+    await signOut(auth);
+    window.location.href = "index.html";
+};
